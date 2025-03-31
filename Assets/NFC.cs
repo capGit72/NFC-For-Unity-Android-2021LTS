@@ -42,11 +42,11 @@ public class NFC : MonoBehaviour
                     {
                         Debug.Log("TAG DISCOVERED");
                         // Get ID of tag
-                        AndroidJavaObject mNdefMessage = mIntent.Call<AndroidJavaObject>("getParcelableExtra", "android.nfc.extra.TAG");
-                        if (mNdefMessage != null)
+                        AndroidJavaObject tag = mIntent.Call<AndroidJavaObject>("getParcelableExtra", "android.nfc.extra.TAG");
+                        if (tag != null)
                         {
-                            byte[] payLoad = mNdefMessage.Call<byte[]>("getId");
-                            string text = System.Convert.ToBase64String(payLoad);
+                            string[] payload = tag.Call<string[]>("getTechList");
+                            string text = String.Join(",", payload);
                             tag_output_text.text += "This is your tag text: " + text;
                             Destroy(GetComponent("MeshRenderer")); //Destroy Box when NFC ID is displayed
                             tagID = text;
